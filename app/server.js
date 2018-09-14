@@ -17,9 +17,7 @@ app.use(express.static(__dirname + '/public'));
 app.listen(PORT,function(){
     console.log("Listening on port: ",PORT);
 })
-// $("#click").on("click", function(){
-//     console.log("button click works!")
-// });
+
 
 // 1. Your survey should have 10 questions of your choosing. Each answer should be on a scale of 1 to 5 based on how much the user agrees or disagrees with a question.
 

@@ -6,6 +6,7 @@
        
         <!--Bootstrap Link-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        
         <!--CSS Link-->
         <link rel="stylesheet" type="text/css" href="style.css">
         <!--JQuery Link-->
@@ -17,6 +18,7 @@
     </head>
 
     <body>
+        
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <h1 class="display-4 align-center">Survey</h1>
@@ -39,18 +41,43 @@
             </div>
 
             <div class="align-center">
-                <button  type="submit reset" id="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button  type="submit" id="submit" data-toggle="modal" data-target="modal" class="btn btn-primary btn-lg">Submit</button>     
             </div>
+           
+            <div class="modal" id="toggleModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Here is your match!</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Modal body text goes here.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+           
+                  
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
        
         <script type="text/javascript">
-            var counter = 1;
             var q = ["Firefly is an awesome show.","Does traveling with an extra pair of socks seem reasonable?",
                 "How do you feel about ferberization?","Does a bottle of whiskey and a harmonica make a good survival kit?",
                 "Do speling mistakes anoy yu?","Does cheese excite you?","Does proper punctuation arouse your curiosity?",
                 "Alliteration always alleviates all antipathy.","George Carlin is a philosopher.",
                 "Do you find people wearing sequines fashionable?"];
-
+            var counter = 0;
             $(document).ready(function() {
+                console.log("REFRESH?????")
                 $("#question").empty();
                 for (var i = 0; i<q.length; i++){
                     $(`#question`).append(`<div id=quest${i}>`)
@@ -60,12 +87,11 @@
                
                 $("#submit").on("click",function(event){
                     
-                    // event.preventDefault();
+                    event.preventDefault();
                     var fname = $("#firstName").val().trim();
                     var lname = $("#lastName").val().trim();
                     var userValues ={
-                        name: fname,
-                        last: lname,
+                        name: fname+ " " + lname,
                         vals: []    
                     }
 
@@ -73,10 +99,16 @@
                         var value = $(`#quest${i} input:radio[name=q${i}]:checked`).val();
                         userValues.vals.push(value);
                     }
-                    console.log("Submit button works!");
-                    $.post('/api/new',userValues,function(){});
-                    location.reload();
+                    
+                    $.post('/api/new',userValues,function(data){
+                        console.log("DATA FROM BACK BACK END: ",data)
+                        $('.modal-body').text(`${data.name}`)   
+                        $('.modal-body').text(`Name: ${data.name}`)   
+                        $('#toggleModal').modal('show')
+
+                    });    
                 });
+                
             });
 
             function radButtons(i) {
